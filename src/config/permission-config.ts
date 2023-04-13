@@ -60,6 +60,21 @@ export const PermissionConfiguration: PermissionConfigInterface = {
       id: 2,
       name: 'normal',
       description: 'normal user of the system'
+    },
+    {
+      id: 3,
+      name: 'admin',
+      description: 'admin user of the system'
+    },
+    {
+      id: 4,
+      name: 'agent',
+      description: 'agent user of the system'
+    },
+    {
+      id: 5,
+      name: 'cardholder',
+      description: 'cardholder user of the system'
     }
   ],
   defaultRoutes: [
@@ -323,7 +338,7 @@ export const PermissionConfiguration: PermissionConfigInterface = {
           ]
         },
         {
-          name: 'Delete email templates by id',
+          name: 'Deleteeee email templates by id',
           route: [
             {
               path: '/email-templates/:id',

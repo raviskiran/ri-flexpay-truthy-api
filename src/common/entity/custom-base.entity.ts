@@ -26,9 +26,15 @@ export abstract class CustomBaseEntity extends BaseEntity {
   })
   updatedAt: Date;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    default: 'superadmin'
+  })
   createdBy: string;
 
-  @Column()
+  @Column({
+    type: 'varchar',
+    default: 'superadmin'
+  })
   lastModifiedBy: string;
 }

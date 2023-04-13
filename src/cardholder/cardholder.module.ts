@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CardholderController } from './cardholder.controller';
-import { CardholderService } from './cardholder.service';
+import { CardHolderController } from './cardholder.controller';
+import { CardHolderService } from './cardholder.service';
 
 @Module({
-  controllers: [CardholderController],
-  providers: [CardholderService]
+  controllers: [CardHolderController],
+  providers: [CardHolderService]
 })
 export class CardholderModule {}

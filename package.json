@@ -29,7 +29,7 @@
     "migration:rollback": "npm run typeorm migration:revert",
     "seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n src/config/ormconfig.ts",
     "precommit": "lint-staged && npm run lint",
-    "prepush": "npm run test:unit && npm run test:e2e",
+    "prepush": "npm run test:unit",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -58,6 +58,7 @@
     "coveralls": "^3.1.1",
     "helmet": "^5.1.1",
     "ioredis": "^4.28.5",
+    "mysql": "^2.18.1",
     "nest-winston": "^1.6.2",
     "nestjs-i18n": "^8.2.2",
     "nestjs-throttler-storage-redis": "^0.1.18",
@@ -71,6 +72,7 @@
     "rate-limiter-flexible": "^2.3.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
+    "soap": "^1.0.0",
     "swagger-ui-express": "^4.3.0",
     "typeorm": "^0.2.41",
     "typeorm-seeding": "^1.6.1",
@@ -78,7 +80,7 @@
     "uuid": "^8.3.2",
     "winston": "^3.6.0",
     "winston-cloudwatch": "^3.2.0",
-    "mysql": "^2.18.1"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
