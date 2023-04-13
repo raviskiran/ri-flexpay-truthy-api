@@ -48,6 +48,9 @@ export class UserEntity extends CustomBaseEntity {
   address: string;
 
   @Column()
+  address1: string;
+
+  @Column()
   contact: string;
 
   @Column()
@@ -64,7 +67,7 @@ export class UserEntity extends CustomBaseEntity {
 
   @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP(6)'
   })
   tokenValidityDate: Date;
 
@@ -87,7 +90,7 @@ export class UserEntity extends CustomBaseEntity {
   })
   @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP(6)'
   })
   twoFAThrottleTime?: Date;
 

@@ -2,7 +2,8 @@ import {
   BaseEntity,
   CreateDateColumn,
   PrimaryGeneratedColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  Column
 } from 'typeorm';
 
 /**
@@ -14,14 +15,20 @@ export abstract class CustomBaseEntity extends BaseEntity {
 
   @CreateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP(6)'
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)'
   })
   updatedAt: Date;
+
+  @Column()
+  createdBy: string;
+
+  @Column()
+  lastModifiedBy: string;
 }

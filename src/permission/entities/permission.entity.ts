@@ -11,10 +11,7 @@ export class PermissionEntity extends CustomBaseEntity {
   @Column('varchar', { length: 100 })
   resource: string;
 
-  @Column()
-  @Index({
-    unique: true
-  })
+  @Column('varchar', { length: 100 })
   description: string;
 
   @Column()

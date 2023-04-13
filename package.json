@@ -24,6 +24,7 @@
     "test:unit": "NODE_ENV=test jest --config ./test/unit/jest-unit.json --runInBand",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --config src/config/ormconfig.ts",
     "orm-create": "npm run typeorm migration:create -- -n",
+    "orm-generate": "npm run typeorm migration:generate -- -n",
     "migrate": "npm run typeorm migration:run",
     "migration:rollback": "npm run typeorm migration:revert",
     "seed": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js seed -n src/config/ormconfig.ts",
@@ -76,7 +77,8 @@
     "ua-parser-js": "^1.0.2",
     "uuid": "^8.3.2",
     "winston": "^3.6.0",
-    "winston-cloudwatch": "^3.2.0"
+    "winston-cloudwatch": "^3.2.0",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
