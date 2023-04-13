@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToOne
-} from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { CardHolder } from '../../cardholder/entities/cardholder.entity';
 import { CustomBaseEntity } from '../../common/entity/custom-base.entity';
 

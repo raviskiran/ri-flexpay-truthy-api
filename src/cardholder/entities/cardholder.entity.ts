@@ -1,13 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
-  OneToMany
-} from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Card } from '../../card/entities/card.entity';
 import { Document } from '../../document/entities/document.entity';
 import { CustomBaseEntity } from '../../common/entity/custom-base.entity';

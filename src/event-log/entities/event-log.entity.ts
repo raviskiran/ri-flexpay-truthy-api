@@ -10,6 +10,7 @@ export class EventLog extends CustomBaseEntity {
   @Column({ type: 'json', nullable: true })
   data: any;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToMany((type) => UserEntity, (user) => user.email)
   role: UserEntity[];
 }
