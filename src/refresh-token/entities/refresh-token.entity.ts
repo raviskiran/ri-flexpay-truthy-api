@@ -19,7 +19,9 @@ export class RefreshToken extends BaseEntity {
   @Column()
   ip: string;
 
-  @Column()
+  @Column({
+    length: 1000
+  })
   userAgent: string;
 
   @Index()

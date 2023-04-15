@@ -48,9 +48,8 @@ export class TwofaController {
       throw new UnauthorizedException('invalidOTP');
     }
     const accessToken = await this.usersService.generateAccessToken(user, true);
-    const cookiePayload = this.usersService.buildResponsePayload(accessToken);
-    response.setHeader('Set-Cookie', cookiePayload);
-    return response.status(HttpStatus.NO_CONTENT).json({});
+    const authToken = this.usersService.buildResponsePayload(accessToken);
+    return response.status(HttpStatus.OK).json(authToken);
   }
 
   @Put()

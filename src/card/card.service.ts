@@ -3,14 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entities/card.entity';
 import { Repository } from 'typeorm';
 import * as XLSX from 'xlsx';
+import { CardRepository } from './card.repository';
 
 @Injectable()
 export class CardService {
   constructor(
-    @InjectRepository(Card)
-    private readonly cardRepository: Repository<Card>
+    @InjectRepository(CardRepository)
+    private readonly cardRepository: CardRepository
   ) {}
 
+  async getUnallocatedCards(): Promise<Card[]> {
+    return this.cardRepository.getUnallocatedCards();
+  }
   async importCards(file: Express.Multer.File) {
     const workbook = XLSX.read(file.buffer, { type: 'buffer' });
     const sheetNameList = workbook.SheetNames;
@@ -25,9 +29,16 @@ export class CardService {
 
     for (const row of data) {
       const card = new Card();
-      card.cardNumber = row['Card Number'];
-      card.sequenceNumber = row['Sequence Number'];
-      card.trackingNumber = row['Tracking Number'];
+      card.cardNumber = row['card_id'];
+      card.statusId = row['status_id'];
+      card.customerId = row['customer_id'];
+      card.plastic = row['Plastic'];
+      card.sequenceNumber = row['card_id'];
+      card.allocated = 'false';
+      card.trackingNumber = row['card_id'];
+
+      //   card.sequenceNumber = row['Sequence Number'];
+      //   card.trackingNumber = row['Tracking Number'];
 
       await this.cardRepository.save(card);
     }
@@ -41,11 +52,7 @@ export class CardService {
       return false;
     }
 
-    const requiredColumns = [
-      'Card Number',
-      'Sequence Number',
-      'Tracking Number'
-    ];
+    const requiredColumns = ['card_id', 'status_id', 'customer_id', 'Plastic'];
     const rowKeys = Object.keys(data[0]);
 
     return requiredColumns.every((column) => rowKeys.includes(column));

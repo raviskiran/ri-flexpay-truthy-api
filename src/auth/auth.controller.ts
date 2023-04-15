@@ -54,6 +54,31 @@ export class AuthController {
     return this.authService.create(registerUserDto);
   }
 
+  // @Post('/auth/login')
+  // async login(
+  //   @Req()
+  //   req: Request,
+  //   @Res()
+  //   response: Response,
+  //   @Body()
+  //   userLoginDto: UserLoginDto
+  // ) {
+  //   const ua = UAParser(req.headers['user-agent']);
+  //   const refreshTokenPayload: Partial<RefreshToken> = {
+  //     ip: req.ip,
+  //     userAgent: JSON.stringify(ua),
+  //     browser: ua.browser.name,
+  //     os: ua.os.name
+  //   };
+  //   const cookiePayload = await this.authService.login(
+  //     userLoginDto,
+  //     refreshTokenPayload
+  //   );
+  //   console.log(cookiePayload)
+  //   response.setHeader('Set-Cookie', cookiePayload);
+  //   return response.status(HttpStatus.NO_CONTENT).json({});
+  // }
+
   @Post('/auth/login')
   async login(
     @Req()
@@ -70,12 +95,13 @@ export class AuthController {
       browser: ua.browser.name,
       os: ua.os.name
     };
-    const cookiePayload = await this.authService.login(
+    const authtoken = await this.authService.login(
       userLoginDto,
       refreshTokenPayload
     );
-    response.setHeader('Set-Cookie', cookiePayload);
-    return response.status(HttpStatus.NO_CONTENT).json({});
+    console.log(authtoken);
+
+    return response.status(HttpStatus.OK).json(authtoken);
   }
 
   @Post('/refresh')
@@ -86,12 +112,11 @@ export class AuthController {
     response: Response
   ) {
     try {
-      const cookiePayload =
+      const authtoken =
         await this.authService.createAccessTokenFromRefreshToken(
           req.cookies['Refresh']
         );
-      response.setHeader('Set-Cookie', cookiePayload);
-      return response.status(HttpStatus.NO_CONTENT).json({});
+      return response.status(HttpStatus.OK).json(authtoken);
     } catch (e) {
       response.setHeader('Set-Cookie', this.authService.getCookieForLogOut());
       return response.sendStatus(HttpStatus.BAD_REQUEST);

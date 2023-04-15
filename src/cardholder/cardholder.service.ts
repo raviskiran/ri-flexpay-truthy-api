@@ -22,7 +22,7 @@ export class CardHolderService {
     };
 
     // Call the SOAP API method
-    const soapResponse = await soapClient.mySoapMethodAsync(soapInput);
+    //  const soapResponse = await soapClient.mySoapMethodAsync(soapInput);
 
     // Process the SOAP response and extract the data needed for your CardHolder
     const extractedData = {

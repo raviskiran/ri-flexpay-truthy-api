@@ -141,7 +141,7 @@ export class AuthService {
   async login(
     userLoginDto: UserLoginDto,
     refreshTokenPayload: Partial<RefreshToken>
-  ): Promise<string[]> {
+  ): Promise<Record<string, any>> {
     const usernameIPkey = `${userLoginDto.username}_${refreshTokenPayload.ip}`;
     const resUsernameAndIP = await this.rateLimiter.get(usernameIPkey);
     let retrySecs = 0;
@@ -161,6 +161,7 @@ export class AuthService {
     }
 
     const [user, error, code] = await this.userRepository.login(userLoginDto);
+    console.log(user);
     if (!user) {
       const [result, throttleError] = await this.limitConsumerPromiseHandler(
         usernameIPkey
@@ -477,30 +478,55 @@ export class AuthService {
     ];
   }
 
+  // /**
+  //  * build response payload
+  //  * @param accessToken
+  //  * @param refreshToken
+  //  */
+  // buildResponsePayload(accessToken: string, refreshToken?: string): string[] {
+  //   let tokenCookies = [
+  //     `Authentication=${accessToken}; HttpOnly; Path=/; ${
+  //       !isSameSite ? 'SameSite=None; Secure;' : ''
+  //     } Max-Age=${jwtConfig.cookieExpiresIn}`
+  //   ];
+  //   if (refreshToken) {
+  //     const expiration = new Date();
+  //     expiration.setSeconds(expiration.getSeconds() + jwtConfig.expiresIn);
+  //     tokenCookies = tokenCookies.concat([
+  //       `Refresh=${refreshToken}; HttpOnly; Path=/; ${
+  //         !isSameSite ? 'SameSite=None; Secure;' : ''
+  //       } Max-Age=${jwtConfig.cookieExpiresIn}`,
+  //       `ExpiresIn=${expiration}; Path=/; ${
+  //         !isSameSite ? 'SameSite=None; Secure;' : ''
+  //       } Max-Age=${jwtConfig.cookieExpiresIn}`
+  //     ]);
+  //   }
+  //   return tokenCookies;
+  // }
+
   /**
-   * build response payload
+   * build JSON payload
    * @param accessToken
    * @param refreshToken
    */
-  buildResponsePayload(accessToken: string, refreshToken?: string): string[] {
-    let tokenCookies = [
-      `Authentication=${accessToken}; HttpOnly; Path=/; ${
-        !isSameSite ? 'SameSite=None; Secure;' : ''
-      } Max-Age=${jwtConfig.cookieExpiresIn}`
-    ];
+  buildResponsePayload(
+    accessToken: string,
+    refreshToken?: string
+  ): Record<string, any> {
+    const expiration = new Date();
+    expiration.setSeconds(expiration.getSeconds() + jwtConfig.expiresIn);
+
+    const responsePayload: Record<string, any> = {
+      accessToken: accessToken,
+      expiresIn: jwtConfig.expiresIn,
+      expiration: expiration
+    };
+
     if (refreshToken) {
-      const expiration = new Date();
-      expiration.setSeconds(expiration.getSeconds() + jwtConfig.expiresIn);
-      tokenCookies = tokenCookies.concat([
-        `Refresh=${refreshToken}; HttpOnly; Path=/; ${
-          !isSameSite ? 'SameSite=None; Secure;' : ''
-        } Max-Age=${jwtConfig.cookieExpiresIn}`,
-        `ExpiresIn=${expiration}; Path=/; ${
-          !isSameSite ? 'SameSite=None; Secure;' : ''
-        } Max-Age=${jwtConfig.cookieExpiresIn}`
-      ]);
+      responsePayload.refreshToken = refreshToken;
     }
-    return tokenCookies;
+
+    return responsePayload;
   }
 
   /**

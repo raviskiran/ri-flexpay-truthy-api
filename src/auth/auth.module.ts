@@ -14,6 +14,7 @@ import { RateLimiterRedis } from 'rate-limiter-flexible';
 import { RefreshTokenModule } from 'src/refresh-token/refresh-token.module';
 import { JwtTwoFactorStrategy } from 'src/common/strategy/jwt-two-factor.strategy';
 import { JwtStrategy } from 'src/common/strategy/jwt.strategy';
+import { CardRepository } from 'src/card/card.repository';
 
 const throttleConfig = config.get('throttle.login');
 const redisConfig = config.get('queue');
@@ -52,6 +53,8 @@ const LoginThrottleFactory = {
       defaultStrategy: 'jwt'
     }),
     TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([CardRepository]),
+
     MailModule,
     RefreshTokenModule
   ],

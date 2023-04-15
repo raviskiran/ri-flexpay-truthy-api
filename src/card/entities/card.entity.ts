@@ -16,6 +16,18 @@ export class Card extends CustomBaseEntity {
   @Column()
   trackingNumber: string;
 
+  @Column()
+  customerId: string;
+
+  @Column()
+  statusId: string;
+
+  @Column()
+  allocated: string;
+
+  @Column()
+  plastic: string;
+
   @OneToOne(() => CardHolder, (cardHolder) => cardHolder.card)
   cardHolder: CardHolder;
 }
