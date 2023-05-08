@@ -4,7 +4,7 @@ import * as config from 'config';
 const dbConfig = config.get('db');
 const ormConfig: ConnectionOptions = {
   type: process.env.DB_TYPE || dbConfig.type,
-  host: '127.0.0.1' || process.env.DB_HOST || dbConfig.host,
+  host: process.env.DB_HOST || dbConfig.host || '127.0.0.1',
   port: process.env.DB_PORT || dbConfig.port,
   username: process.env.DB_USERNAME || dbConfig.username,
   password: process.env.DB_PASSWORD || dbConfig.password,

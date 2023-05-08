@@ -1,9 +1,10 @@
 db:
-  host: 'localhost'
+  host: 'mysql-2d57efaa-bychancebychoice-9fb4.aivencloud.com'
   type: 'mysql'
-  port: 3306
-  username: 'root'
-  password: 'root'
+  port: 15731
+  username: 'avnadmin'
+  password: 'AVNS_Lm1RoSeSnMpqUYtv9Wg'
+  database: 'ri'
   synchronize: false
 
 jwt:
