@@ -3,12 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CardHolder } from './entities/cardholder.entity';
 import * as soap from 'soap';
+import { CardHolderRepository } from './cardholder.repository';
 
 @Injectable()
 export class CardHolderService {
   constructor(
-    @InjectRepository(CardHolder)
-    private readonly cardHolderRepository: Repository<CardHolder>
+    @InjectRepository(CardHolderRepository)
+    private readonly cardHolderRepository: CardHolderRepository
   ) {}
 
   async create(cardHolderData: Partial<CardHolder>): Promise<CardHolder> {

@@ -31,6 +31,7 @@ import { DashboardModule } from 'src/dashboard/dashboard.module';
 import { AppController } from 'src/app.controller';
 import winstonConfig from 'src/config/winston';
 import { CardModule } from './card/card.module';
+import { CardHolderModule } from './cardholder/cardholder.module';
 
 const appConfig = config.get('app');
 
@@ -73,7 +74,8 @@ const appConfig = config.get('app');
     EmailTemplateModule,
     RefreshTokenModule,
     TwofaModule,
-    DashboardModule
+    DashboardModule,
+    CardHolderModule
   ],
   providers: [
     {

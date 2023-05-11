@@ -20,7 +20,7 @@ async function bootstrap() {
   app.use(helmet());
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   const apiConfig = config.get('app');
-  if (process.env.NODE_ENV === 'development') {
+  if (true) {
     app.enableCors({
       origin: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

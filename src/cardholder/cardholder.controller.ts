@@ -6,7 +6,7 @@ import { CardHolder } from './entities/cardholder.entity';
 export class CardHolderController {
   constructor(private readonly cardHolderService: CardHolderService) {}
 
-  @Post()
+  @Post('create')
   async create(
     @Body() cardHolderData: Partial<CardHolder>
   ): Promise<CardHolder> {
