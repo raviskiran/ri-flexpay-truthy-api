@@ -52,31 +52,35 @@ export class CardHolderService {
       passportId: cardHolderData.cardholder.primaryIdentity.number,
       additionalData: cardHolderData,
       dob: cardHolderData.cardholder.dob,
+      id: cardHolderData.cardholderId,
       card
     };
 
-    if (!cardHolderData.skipSoap) {
-      const client = await soap.createClientAsync(wsdlURL);
+    // if (!cardHolderData.skipSoap) {
+    const client = await soap.createClientAsync(wsdlURL);
 
-      const soapifiedReq = soapifiedRequest(cardHolderData);
+    const soapifiedReq = soapifiedRequest(cardHolderData);
 
+    if (!cardHolderData.cardholderId)
       soapRes = await client.createCardholderAsync(soapifiedReq);
-      console.log('response');
+    else soapRes = await client.updateCardholderAsync(soapifiedReq);
 
-      console.log(soapRes);
+    console.log('response');
 
-      //if success we get this
-      // {
-      //   return: {
-      //     responseCode: 'FNDS000001',
-      //     responseMessage: 'Success',
-      //     newCardNumber: '537164****6317',
-      //     newCardholderId: '406246'
-      //   }
-      // }
+    console.log(soapRes);
 
-      response = soapRes[0].return.responseMessage;
-    }
+    //if success we get this
+    // {
+    //   return: {
+    //     responseCode: 'FNDS000001',
+    //     responseMessage: 'Success',
+    //     newCardNumber: '537164****6317',
+    //     newCardholderId: '406246'
+    //   }
+    // }
+
+    response = soapRes[0].return.responseMessage;
+    // }
     if (response === 'Success') {
       cardHolder.flexpayResponse = soapRes;
       cardHolder.newCardholderId = soapRes[0]?.return?.newCardholderId || 0;
