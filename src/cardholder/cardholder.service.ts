@@ -1,9 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CardHolder } from './entities/cardholder.entity';
 import * as soap from 'soap';
 import { CardHolderRepository } from './cardholder.repository';
+import { CardRepository } from 'src/card/card.repository';
 
 const traceId = () => `RI007${new Date().getTime()}`;
 const wsdlURL =
@@ -25,32 +26,67 @@ const soapifiedRequest = (req: any) => {
 export class CardHolderService {
   constructor(
     @InjectRepository(CardHolderRepository)
-    private readonly cardHolderRepository: CardHolderRepository
+    private readonly cardHolderRepository: CardHolderRepository,
+    private readonly cardRepository: CardRepository
   ) {}
 
   async create(cardHolderData: any) {
-    const client = await soap.createClientAsync(wsdlURL);
+    console.log(cardHolderData);
+    let response = 'Success';
+    let soapRes = [];
+    const card = await this.cardRepository.findOne(
+      { cardNumber: cardHolderData.cardId },
+      {
+        relations: ['cardHolder']
+      }
+    );
 
-    const soapifiedReq = soapifiedRequest(cardHolderData);
-
-    const res = await client.createCardholderAsync(soapifiedReq);
-    console.log('response');
-
-    console.log(res);
-
+    console.log(card);
     const cardHolder: Partial<CardHolder> = {
       firstName: cardHolderData.cardholder.firstName,
       lastName: cardHolderData.cardholder.surname,
-      phoneNumber: cardHolderData.cardholder.phone,
+      phoneNumber:
+        cardHolderData.cardholder.phone ||
+        cardHolderData.cardholder.mobile ||
+        9999999,
       passportId: cardHolderData.cardholder.primaryIdentity.number,
       additionalData: cardHolderData,
-      dob: cardHolderData.cardholder.dob
+      dob: cardHolderData.cardholder.dob,
+      card
     };
-    if (res[0].return.responseMessage === 'Success') {
-      await this.cardHolderRepository.save(cardHolder);
-      return res.status(200).json(res.responseMessage);
+
+    if (!cardHolderData.skipSoap) {
+      const client = await soap.createClientAsync(wsdlURL);
+
+      const soapifiedReq = soapifiedRequest(cardHolderData);
+
+      soapRes = await client.createCardholderAsync(soapifiedReq);
+      console.log('response');
+
+      console.log(soapRes);
+
+      //if success we get this
+      // {
+      //   return: {
+      //     responseCode: 'FNDS000001',
+      //     responseMessage: 'Success',
+      //     newCardNumber: '537164****6317',
+      //     newCardholderId: '406246'
+      //   }
+      // }
+
+      response = soapRes[0].return.responseMessage;
+    }
+    if (response === 'Success') {
+      cardHolder.flexpayResponse = soapRes;
+      cardHolder.newCardholderId = soapRes[0]?.return?.newCardholderId || 0;
+      cardHolder.newCardNumber = soapRes[0]?.return?.newCardNumber || 0;
+
+      await this.cardRepository.save({ ...card, allocated: 'true' });
+
+      return this.cardHolderRepository.save(cardHolder);
     } else {
-      throw new BadRequestException(res[0].return.responseMessage);
+      throw new BadRequestException(response);
     }
   }
 
@@ -58,9 +94,22 @@ export class CardHolderService {
     return this.cardHolderRepository.findOne(id);
   }
 
-  async getAll(): Promise<CardHolder[]> {
-    return this.cardHolderRepository.find();
-  }
+  // async getAll(): Promise<CardHolder[]> {
+  //   return this.cardHolderRepository.find();
+  // }
 
+  async getAll(): Promise<CardHolder[]> {
+    return this.cardHolderRepository.find({
+      select: [
+        'id',
+        'firstName',
+        'lastName',
+        'newCardholderId',
+        'newCardNumber',
+        'card'
+      ],
+      where: { card: Not(0) } // replace these field names with the ones you need
+    });
+  }
   // ... other methods
 }

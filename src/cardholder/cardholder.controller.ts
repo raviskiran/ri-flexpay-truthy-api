@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res } from '@nestjs/common';
+import { Response } from 'express';
+
 import { CardHolderService } from './cardholder.service';
 import { CardHolder } from './entities/cardholder.entity';
 
@@ -8,9 +10,11 @@ export class CardHolderController {
 
   @Post('create')
   async create(
-    @Body() cardHolderData: Partial<CardHolder>
-  ): Promise<CardHolder> {
-    return this.cardHolderService.create(cardHolderData);
+    @Body() cardHolderData: Partial<CardHolder>,
+    @Res() res: Response
+  ) {
+    await this.cardHolderService.create(cardHolderData);
+    return res.status(200).json('Success');
   }
 
   @Get(':id')

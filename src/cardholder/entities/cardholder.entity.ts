@@ -20,6 +20,15 @@ export class CardHolder extends CustomBaseEntity {
   @Column()
   passportId: string;
 
+  @Column()
+  newCardholderId: string;
+
+  @Column()
+  newCardNumber: string;
+
+  @Column({ type: 'json' })
+  flexpayResponse: any;
+
   @Column({ type: 'json' })
   additionalData: any;
 
