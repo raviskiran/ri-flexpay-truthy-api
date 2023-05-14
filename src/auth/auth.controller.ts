@@ -54,6 +54,19 @@ export class AuthController {
     return this.authService.create(registerUserDto);
   }
 
+  @Post('/create-agent')
+  createAgent(
+    @Body(ValidationPipe)
+    registerUserDto: RegisterUserDto
+  ): Promise<UserSerializer> {
+    return this.authService.createAgent(registerUserDto);
+  }
+
+  @Get('/all-agents')
+  allAgents(): Promise<Pagination<UserSerializer>> {
+    return this.authService.findAllAgents();
+  }
+
   // @Post('/auth/login')
   // async login(
   //   @Req()

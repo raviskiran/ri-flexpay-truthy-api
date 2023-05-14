@@ -125,6 +125,30 @@ export class AuthService {
   }
 
   /**
+   * add new user
+   * @param createUserDto
+   */
+  async createAgent(
+    createUserDto: DeepPartial<UserEntity>
+  ): Promise<UserSerializer> {
+    const token = await this.generateUniqueToken(12);
+    createUserDto.status = UserStatusEnum.ACTIVE;
+    createUserDto.roleId = 4;
+    createUserDto.address = 'null';
+    createUserDto.address1 = 'null';
+    createUserDto.avatar = 'null';
+    createUserDto.contact = 'null';
+
+    const currentDateTime = new Date();
+    currentDateTime.setHours(currentDateTime.getHours() + 1);
+    createUserDto.tokenValidityDate = currentDateTime;
+
+    const user = await this.userRepository.store(createUserDto, token);
+
+    return user;
+  }
+
+  /**
    * find user entity by condition
    * @param field
    * @param value
@@ -270,6 +294,17 @@ export class AuthService {
         ]
       }
     );
+  }
+
+  /**
+   * Get all agents paginated
+   * @param userSearchFilterDto
+   */
+  async findAllAgents(): Promise<any> {
+    return this.userRepository.find({
+      select: ['username', 'email', 'name'],
+      where: { roleId: 4 } // replace these field names with the ones you need
+    });
   }
 
   /**
