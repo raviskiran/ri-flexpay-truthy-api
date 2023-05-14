@@ -9,16 +9,31 @@ import { CardRepository } from 'src/card/card.repository';
 const traceId = () => `RI007${new Date().getTime()}`;
 const wsdlURL =
   'https://sandbox.flexpay.co.za/fnds-webservices/v2.0/FlexpayFicaStandardService?wsdl';
-const soapifiedRequest = (req: any) => {
-  const creds = {
+const soapifiedRequest = (req: any, card: any) => {
+  const creds: any = {
     traceId: traceId(),
     clientUsername: 'RETAIL_INSIGHTS_TEST',
     clientPassword: 'R3t@!1T3sTi8',
-    cardId: '3525223',
     customerId: '2985'
   };
+
   const reqData = { ...req };
   delete reqData.email;
+  console.log(' **************** ');
+
+  console.log(card?.cardHolder);
+
+  console.log(' **************** ');
+
+  console.log(card?.cardHolder?.newCardholderId);
+
+  console.log(' **************** ');
+
+  if (card?.cardHolder?.newCardholderId) {
+    creds.cardholderId = card.cardHolder.newCardholderId;
+    delete reqData.cardId;
+    delete reqData.cardholderId;
+  }
   return { arg0: { ...creds, ...reqData } };
 };
 
@@ -59,7 +74,9 @@ export class CardHolderService {
     // if (!cardHolderData.skipSoap) {
     const client = await soap.createClientAsync(wsdlURL);
 
-    const soapifiedReq = soapifiedRequest(cardHolderData);
+    const soapifiedReq = soapifiedRequest(cardHolderData, card);
+
+    console.log(soapifiedReq);
 
     if (!cardHolderData.cardholderId)
       soapRes = await client.createCardholderAsync(soapifiedReq);
